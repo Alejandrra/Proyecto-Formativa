@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import { Formik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BotonExcel from "./BotonExcel";
-import { CCard, CCardBody, CCardHeader, CButton,CFormCheck, CFormText} from "@coreui/react";
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CButton,
+  CFormCheck,
+  CFormText,
+} from "@coreui/react";
 import MyDocument from "./MyDocument";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
-// importa la libreria toastify 
+// importa la libreria toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +22,30 @@ export default function FormLogins({ onDataSubmit, dataList }) {
     { type: "", lastName: "", firstName: "" },
   ]);
 
+  const [checks, setChecks] = useState({
+    docencia: false,
+    investigacion: false,
+    vinculacion: false,
+    desarrollo_docente: false,
+    internacionalizacion: false,
+    m_est_entr: false,
+    m_est_salien: false,
+    g_acad_entr: false,
+    g_acad_salien: false,
+    m_doc_entr: false,
+    m_doc_salien: false,
+    m_adm_salien: false,
+    convenio_efect: false,
+    prod_cientic: false,
+    intern_curriculo: false,
+    intern_casa: false,
+  });
+
   const [datos, setDatos] = useState([]);
+
+  const handleCheckboxChange = (e) => {
+    setChecks({ ...checks, [e.target.name]: e.target.checked });
+  };
 
   const handleAddParticipant = () => {
     setParticipants([
@@ -37,43 +67,73 @@ export default function FormLogins({ onDataSubmit, dataList }) {
 
   const handleSubmit = (values, { resetForm }) => {
     //anidar participantes a los valore
-    
-    const nombre = document.getElementById("c_NombresMovi").value;
-    const apellido = document.getElementById("c_ApellidosMovi").value;
-    const tipo = document.getElementById("c_tParticipante").value;
-    
-    const participant ={
-      type: tipo,
-      lastName: apellido,
-      firstName: nombre
-    }
-    
-    values.participants = participant
+    //Se añaden los participantes al objeto values
 
-    
-      setDatos([...datos, values]);
-    
+    values.participants = participants;
+
+    //check de los valores
+    values.docencia = checks.docencia;
+    values.investigacion = checks.investigacion;
+    values.vinculacion = checks.vinculacion;
+    values.desarrollo_docente = checks.desarrollo_docente;
+    values.internacionalizacion = checks.internacionalizacion;
+    values.m_est_entr = checks.m_est_entr;
+    values.m_est_salien = checks.m_est_salien;
+    values.g_acad_entr = checks.g_acad_entr;
+    values.g_acad_salien = checks.g_acad_salien;
+    values.m_doc_entr = checks.m_doc_entr;
+    values.m_doc_salien = checks.m_doc_salien;
+    values.m_adm_salien = checks.m_adm_salien;
+    values.convenio_efect = checks.convenio_efect;
+    values.prod_cientic = checks.prod_cientic;
+    values.intern_curriculo = checks.intern_curriculo;
+    values.intern_casa = checks.intern_casa;
+
+    setDatos([...datos, values]);
 
     setTimeout(() => {
       console.log(datos);
     }, 500);
 
     //agregamos la alerta
-    toast.success("Los datos se han guardado correctamente",{
+    toast.success("Los datos se han guardado correctamente", {
       position: "top-right",
       autoClose: 3000,
     });
 
+    resetForm();
+    // poner todos los checks en false
+    setChecks({
+      docencia: false,
+      investigacion: false,
+      vinculacion: false,
+      desarrollo_docente: false,
+      internacionalizacion: false,
+      m_est_entr: false,
+      m_est_salien: false,
+      g_acad_entr: false,
+      g_acad_salien: false,
+      m_doc_entr: false,
+      m_doc_salien: false,
+      m_adm_salien: false,
+      convenio_efect: false,
+      prod_cientic: false,
+      intern_curriculo: false,
+      intern_casa: false,
+    });
+
+    //limpiar los participantes
+    setParticipants([{ type: "", lastName: "", firstName: "" }]);
   };
 
   return (
     <div className="row justify-content-center">
       <div className="col-lg-10">
-         {/* Agrega el ToastContainer aquí */}
-      <ToastContainer />
+        {/* Agrega el ToastContainer aquí */}
+        <ToastContainer />
         <Formik
           initialValues={{
-            carrera:"",
+            carrera: "",
             sede: "",
             c_carrera: "",
             c_convenio: "",
@@ -86,38 +146,37 @@ export default function FormLogins({ onDataSubmit, dataList }) {
             a_conocimiento: "",
             financiamiento: "",
             c_tParticipante: "",
-            c_ApellidosMo:"",
-            c_NombresMovi:"",
+            c_ApellidosMo: "",
+            c_NombresMovi: "",
 
             // nuevos campos
 
-            a_funciones_sustantivas:"",
-            docencia:"",
-            investigacion:"",
-            vinculacion:"",
-            desarrollo_docente:"",
-            internacionalizacion:"",
+            a_funciones_sustantivas: "",
+            docencia: "",
+            investigacion: "",
+            vinculacion: "",
+            desarrollo_docente: "",
+            internacionalizacion: "",
 
-            indicadores:"",
-            m_est_entr:"",
-            m_est_salien:"",
-            g_acad_entr:"",
-            g_acad_salien:"",
-            m_doc_entr:"", 
-            m_doc_salien:"",
-            m_adm_salien:"",
-            convenio_efect:"",
-            prod_cientic:"",
-            intern_curriculo:"",
-            intern_casa:"",
-          }
-        }
+            indicadores: "",
+            m_est_entr: "",
+            m_est_salien: "",
+            g_acad_entr: "",
+            g_acad_salien: "",
+            m_doc_entr: "",
+            m_doc_salien: "",
+            m_adm_salien: "",
+            convenio_efect: "",
+            prod_cientic: "",
+            intern_curriculo: "",
+            intern_casa: "",
+          }}
           validate={(valores) => {
             let errores = {};
             if (!valores.sede) {
               errores.sede = "Escriba el nombre de la SEDE";
             }
-             if (!valores.c_carrera) {
+            if (!valores.c_carrera) {
               errores.c_carrera = "Escriba el Código de la Carrera";
             }
             if (!valores.c_convenio) {
@@ -146,10 +205,9 @@ export default function FormLogins({ onDataSubmit, dataList }) {
             }
             if (!valores.financiamiento) {
               errores.financiamiento = "Escriba el nombre del Financiamiento";
-            } 
+            }
             return errores;
-          }
-        }
+          }}
           onSubmit={handleSubmit}
         >
           {({ values, errors, handleSubmit, handleChange, handleBlur }) => (
@@ -174,8 +232,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       <div className="text-warning">{errors.sede}</div>
                     )}
                   </div>
-                  
-                  
+
                   <div className="col-lg-4">
                     <label htmlFor="c_carrera" className="form-label">
                       Código de Carrera
@@ -501,45 +558,133 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       </div>
                     )}
                   </div>
-                 
-                 <div>
-                 </div>
+
+                  <div></div>
 
                   <CCard>
                     <CCardHeader>Aporte a Función Sustantiva</CCardHeader>
                     <CCardBody>
-
-                      <CFormCheck id="docencia" label="Docencia" />
-                      <CFormCheck id="investigacion" label="Investigacion"/>
-                      <CFormCheck id="vinculacion" label="Vinculación"/>
-                      <CFormCheck id="desarrollo_docente" label="Desarrollo Docente/Administrativo"/>
-                      <CFormCheck id="internacionalizacion" label="Internacionalización"/>
-
+                      <CFormCheck
+                        id="docencia"
+                        name="docencia"
+                        label="Docencia"
+                        checked={checks.docencia}
+                        onChange={handleCheckboxChange}
+                      />
+                      <CFormCheck
+                        id="investigacion"
+                        label="Investigacion"
+                        checked={checks.investigacion}
+                        onChange={handleCheckboxChange}
+                        name="investigacion"
+                      />
+                      <CFormCheck
+                        id="vinculacion"
+                        label="Vinculación"
+                        name="vinculacion"
+                        checked={checks.vinculacion}
+                        onChange={handleCheckboxChange}
+                      />
+                      <CFormCheck
+                        id="desarrollo_docente"
+                        label="Desarrollo Docente/Administrativo"
+                        name="desarrollo_docente"
+                        checked={checks.desarrollo_docente}
+                        onChange={handleCheckboxChange}
+                      />
+                      <CFormCheck
+                        id="internacionalizacion"
+                        label="Internacionalización"
+                        name="internacionalizacion"
+                        checked={checks.internacionalizacion}
+                        onChange={handleCheckboxChange}
+                      />
                     </CCardBody>
-                  
                   </CCard>
 
-                    <CCardHeader>Indicadores</CCardHeader>
-                    <CCardBody>
-
-                      <CFormCheck id="m_est_entr" label="Opción 1 MOV.EST.ENTR."/>
-                      <CFormCheck id="m_est_salien" label="Opción 2 MOV.EST.SALIEN."/>
-                      <CFormCheck id="g_acad_entr" label="Opción 3 GIRA ACAD.ENTR."/>
-                      <CFormCheck id="g_acad_salien" label ="Opción 4 GIRA ACAD.SALIEN."/>
-                      <CFormCheck id="m_doc_entr" label= "Opción 5 MOV.DOC.ENTR."/>
-                      <CFormCheck id="m_doc_salien" label="Opción 6 MOV.DOC.SALIE."/>
-                      <CFormCheck id="m_adm_salien" label="Opción 7 MOV.ADM.SALIE."/>
-                      <CFormCheck id="convenio_efect" label="Opción 8 CONVENIO EFECT."/>
-                      <CFormText id="prod_cientic" label="Opción 9 PROD.CIENTÍFIC."/>
-                      <CFormCheck id="intern_curriculo" label="Opción 10 INTERN.CURRÍCULO."/>
-                      <CFormCheck id="intern_casa" label="Opción 11 INTERN.EN CASA"/>
-                    </CCardBody>
-                  <CCard>
-
-                  </CCard>
-
+                  <CCardHeader>Indicadores</CCardHeader>
+                  <CCardBody>
+                    <CFormCheck
+                      id="m_est_entr"
+                      label="Opción 1 MOV.EST.ENTR."
+                      name="m_est_entr"
+                      checked={checks.m_est_entr}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="m_est_salien"
+                      label="Opción 2 MOV.EST.SALIEN."
+                      name="m_est_salien"
+                      checked={checks.m_est_salien}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="g_acad_entr"
+                      label="Opción 3 GIRA ACAD.ENTR."
+                      name="g_acad_entr"
+                      checked={checks.g_acad_entr}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="g_acad_salien"
+                      label="Opción 4 GIRA ACAD.SALIEN."
+                      name="g_acad_salien"
+                      checked={checks.g_acad_salien}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="m_doc_entr"
+                      label="Opción 5 MOV.DOC.ENTR."
+                      name="m_doc_entr"
+                      checked={checks.m_doc_entr}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="m_doc_salien"
+                      label="Opción 6 MOV.DOC.SALIE."
+                      name="m_doc_salien"
+                      checked={checks.m_doc_salien}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="m_adm_salien"
+                      label="Opción 7 MOV.ADM.SALIE."
+                      name="m_adm_salien"
+                      checked={checks.m_adm_salien}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="convenio_efect"
+                      label="Opción 8 CONVENIO EFECT."
+                      name="convenio_efect"
+                      checked={checks.convenio_efect}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormText
+                      id="prod_cientic"
+                      label="Opción 9 PROD.CIENTÍFIC."
+                      name="prod_cientic"
+                      checked={checks.prod_cientic}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="intern_curriculo"
+                      label="Opción 10 INTERN.CURRÍCULO."
+                      name="intern_curriculo"
+                      checked={checks.intern_curriculo}
+                      onChange={handleCheckboxChange}
+                    />
+                    <CFormCheck
+                      id="intern_casa"
+                      label="Opción 11 INTERN.EN CASA"
+                      name="intern_casa"
+                      checked={checks.intern_casa}
+                      onChange={handleCheckboxChange}
+                    />
+                  </CCardBody>
+                  <CCard></CCard>
                 </div>
-                
+
                 <button type="submit" className="btn btn-primary">
                   Guardar
                 </button>
@@ -563,7 +708,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
             )
           }
         </PDFDownloadLink>
-        <BotonExcel dataCSV={dataList}  participants={participants} />
+        <BotonExcel dataCSV={datos} participants={participants} />
       </div>
     </div>
   );

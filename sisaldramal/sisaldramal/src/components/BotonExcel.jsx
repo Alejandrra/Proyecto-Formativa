@@ -4,9 +4,9 @@ import React from "react";
 // en caso de manejar base de datos, se debe hacer un join de las tablas para que se pueda exportar a excel
 //tabla participantes
 
-  //tabla de convenios
+//tabla de convenios
 
-  //tabla participantes_convenios
+//tabla participantes_convenios
 // npm install xlsx-js-style
 import * as XLSX from "xlsx-js-style";
 
@@ -23,18 +23,47 @@ const ButtonExcel = ({ dataCSV, participants }) => {
  ]
   */
   // Necesito que participants tenga la misma estructura que dataCSV
+  if (dataCSV.participants === undefined) {
+    dataCSV.participants = participants;
+  }
+  if (dataCSV.participants.length !== 0) {
+    participants = dataCSV.participants.map((participant) => {
+      return {
+        c_tParticipante: participant.type,
+        c_ApellidosMo: participant.lastName,
+        c_NombresMovi: participant.firstName,
+      };
+    });
+  }
+  // cambiar mis checks a X
 
-  participants = participants.map((participant) => {
+  dataCSV = dataCSV.map((row) => {
     return {
-      c_tParticipante: participant.type,
-      c_ApellidosMo: participant.lastName,
-      c_NombresMovi: participant.firstName,
+      ...row,
+      docencia: row.docencia === true ? "X" : "",
+      investigacion: row.investigacion === true ? "X" : "",
+      vinculacion: row.vinculacion === true ? "X" : "",
+      desarrollo_docente: row.desarrollo_docente === true ? "X" : "",
+      internacionalizacion: row.internacionalizacion === true ? "X" : "",
+      m_est_entr: row.m_est_entr === true ? "X" : "",
+      m_est_salien: row.m_est_salien === true ? "X" : "",
+      g_acad_entr: row.g_acad_entr === true ? "X" : "",
+      g_acad_salien: row.g_acad_sal === true ? "X" : "",
+      m_doc_entr: row.m_doc_entr === true ? "X" : "",
+      m_doc_salien: row.m_doc_sal === true ? "X" : "",
+      m_adm_salien: row.m_adm_sal === true ? "X" : "",
+      convenio_efect: row.convenio_efect === true ? "X" : "",
+      prod_cientic: row.prod_cientic === true ? "X" : "",
+      intern_curriculo: row.intern_curriculo === true ? "X" : "",
+      intern_casa: row.intern_casa === true ? "X" : "",
     };
   });
-
   // Caso a editar: El datacvs y el particpants ya van relacionados como tal, por lo que no se necesita hacer un join, solo se necesita recorrer el datacsv y añadir los campos de participantes
   //unir los dos arreglos pero que el partipante se una a la posicion 0, mas no que se convierta en la posocion 1
-  dataCSV[0] = participants.reduce((acc, obj) => ({ ...acc, ...obj }), dataCSV[0]);
+  dataCSV[0] = participants.reduce(
+    (acc, obj) => ({ ...acc, ...obj }),
+    dataCSV[0]
+  );
 
   // Si doy en guardar, solo me aparece el ultimo registro
   // Función para formatear la fecha
@@ -65,25 +94,62 @@ const ButtonExcel = ({ dataCSV, participants }) => {
     { label: "FECHA FIN", key: "f_fin" },
     { label: "ÁREA DE CONOCIMIENTO", key: "a_conocimiento" },
     { label: "FINANCIAMIENTO", key: "financiamiento" },
+
+    { label: "APORTE A FUNCIÓN SUSTANTIVA. DOCENCIA", key: "docencia" },
+    {
+      label: "APORTE A FUNCIÓN SUSTANTIVA. INVESTIGACIÓN",
+      key: "investigacion",
+    },
+    { label: "APORTE A FUNCIÓN SUSTANTIVA. VINCULACIÓN", key: "vinculacion" },
+    {
+      label: "APORTE A FUNCIÓN SUSTANTIVA. DESARROLLO DOCENTE / ADMINISTRATIVO",
+      key: "desarrollo_docente",
+    },
+    {
+      label: "APORTE A FUNCIÓN SUSTANTIVA. INTERNACIONALIZACIÓN",
+      key: "internacionalizacion",
+    },
+
+    { label: "INDICADOR OPCIÓN 1 MOV. EST. ENTR.", key: "m_est_entr" },
+    { label: "INDICADOR OPCIÓN 2 MOV. EST. SALIEN.", key: "m_est_salien" },
+    { label: "INDICADOR OPCIÓN 3 GIRA ACAD. ENTR", key: "g_acad_entr" },
+    { label: "INDICADOR OPCIÓN 4 GIRA. ACAD. SALIEN.", key: "g_acad_salien" },
+    { label: "INDICADOR OPCIÓN 5 MOV. DOC. ENTR.", key: "m_doc_entr" },
+    { label: "INDICADOR OPCIÓN 6 MOV. DOC. SALIEN.", key: "m_doc_salien" },
+    { label: "INDICADOR OPCIÓN 7 MOV. ADM. SALIEN.", key: "m_adm_salien" },
+
+    { label: "INDICADOR OPCIÓN 8 CONVENIO EFECT.", key: "convenio_efect" },
+    { label: "INDICADOR OPCIÓN 9 PROD. CIENTÍFIC.", key: "prod_cientic" },
+    {
+      label:
+        "INDICADOR OPCIÓN 10 INTER. CURRICULO (COIL, IDV, TELECOLABORACIÓN)",
+      key: "intern_curriculo",
+    },
+    {
+      label:
+        "INDICADOR OPCIÓN 11 INTER EN CASA (INTERCULTURALIDAD EN EL CAMPUS)",
+      key: "intern_casa",
+    },
   ];
 
   const exportToExcel = () => {
+    console.log("dataCSV", dataCSV);
     // Crear celdas de título y subtítulo
     const titleCell = {
       v: "PONTIFICIA UNIVERSIDAD CATÓLICA DEL ECUADOR",
       t: "s",
-      s: { font: { bold: true, sz:11 } }, // Negrita
+      s: { font: { bold: true, sz: 11 } }, // Negrita
     };
 
     const subtitle = {
       v: "COORDINACIÓN DE INFORMACIÓN Y ESTADÍSTICA",
       t: "s",
-      s: { font: { bold: true, sz:11 } }, // Negrita
+      s: { font: { bold: true, sz: 11 } }, // Negrita
     };
     const subtitle2 = {
       v: "INTERNACIONALIZACIÓN",
       t: "s",
-      s: { font: { bold: true, sz:22 } }, // Negrita
+      s: { font: { bold: true, sz: 22 } }, // Negrita
     };
 
     // agregar headers
@@ -104,8 +170,9 @@ const ButtonExcel = ({ dataCSV, participants }) => {
     const ws = XLSX.utils.aoa_to_sheet(sheetData);
 
     // Ajustar anchos de columnas
-    ws["!cols"] = [...Array(columns.length)].map(() => ({ wch: 20 },{ wch: 30 }));
-    
+    ws["!cols"] = [...Array(columns.length)].map(
+      () => ({ wch: 20 }, { wch: 30 })
+    );
 
     // Ajustar altos de filas
 
@@ -120,24 +187,66 @@ const ButtonExcel = ({ dataCSV, participants }) => {
       { s: { r: 2, c: 1 }, e: { r: 2, c: 3 } },
     ];
 
-    // Agregar color a las celdas de fila 4
-    Object.keys(ws).forEach((key) => {
-      if (key[0] !== "!") {
-        // Verificar que la celda esté en la fila 4
-        if (parseInt(key.slice(1)) === 4) {
-          ws[key].s = {
-            fill: {
-              fgColor: { rgb: "d9e1f2", patternType: "solid" }, // Color de fondo
-            },
-            font: {
-             // bold: true, // Negrita
-              sz: 11, // Tamaño de fuente 14
-            },
+    function columnLetterToNumber(letters) {
+      // Convierte letras de columna (A, B, ... Z, AA, AB, ...) a número (1, 2, ... 26, 27, ...)
+      let sum = 0;
+      for (let i = 0; i < letters.length; i++) {
+        sum *= 26;
+        // 'A' -> 65, por eso restamos 64 para que A sea 1, B sea 2, etc.
+        sum += letters.charCodeAt(i) - 64;
+      }
+      return sum;
+    }
+
+    Object.keys(ws).forEach((cellKey) => {
+      if (cellKey[0] === "!") return;
+
+      const colLetters = cellKey.match(/[A-Z]+/)[0];
+      const rowNumber = parseInt(cellKey.match(/\d+/)[0]);
+      const colNumber = columnLetterToNumber(colLetters);
+
+      if (rowNumber === 4) {
+        if (colNumber >= 20 && colNumber <= 30) {
+          ws[cellKey].s = {
+            fill: { fgColor: { rgb: "ffdb8a" }, patternType: "solid" },
+            font: { sz: 11 },
             alignment: {
-              horizontal: "center", // Centrado horizontal
-              vertical: "center", // Centrado vertical
+              horizontal: "center",
+              vertical: "center",
+              wrapText: true,
             },
-            //bordes
+            border: {
+              top: { style: "thin", color: { rgb: "000000" } },
+              right: { style: "thin", color: { rgb: "000000" } },
+              bottom: { style: "thin", color: { rgb: "000000" } },
+              left: { style: "thin", color: { rgb: "000000" } },
+            },
+          };
+        } else if (colNumber >= 15 && colNumber <= 19) {
+          ws[cellKey].s = {
+            fill: { fgColor: { rgb: "3f92ff" }, patternType: "solid" },
+            font: { sz: 11 },
+            alignment: {
+              horizontal: "center",
+              vertical: "center",
+              wrapText: true,
+            },
+            border: {
+              top: { style: "thin", color: { rgb: "000000" } },
+              right: { style: "thin", color: { rgb: "000000" } },
+              bottom: { style: "thin", color: { rgb: "000000" } },
+              left: { style: "thin", color: { rgb: "000000" } },
+            },
+          };
+        } else {
+          ws[cellKey].s = {
+            fill: { fgColor: { rgb: "D9E1F2" }, patternType: "solid" },
+            font: { sz: 11 },
+            alignment: {
+              horizontal: "center",
+              vertical: "center",
+              wrapText: true,
+            },
             border: {
               top: { style: "thin", color: { rgb: "000000" } },
               right: { style: "thin", color: { rgb: "000000" } },
@@ -146,9 +255,26 @@ const ButtonExcel = ({ dataCSV, participants }) => {
             },
           };
         }
+      } else if (rowNumber > 4) {
+        ws[cellKey].s = {
+          font: { sz: 11 },
+          alignment: {
+            horizontal: "center",
+            vertical: "center",
+            wrapText: true,
+          },
+          border: {
+            top: { style: "thin", color: { rgb: "000000" } },
+            right: { style: "thin", color: { rgb: "000000" } },
+            bottom: { style: "thin", color: { rgb: "000000" } },
+            left: { style: "thin", color: { rgb: "000000" } },
+          },
+        };
       }
     });
-    
+    // Para asegurar que la fila 4 (índice 3) tenga altura suficiente para 4 líneas, haz:
+    if (!ws["!rows"]) ws["!rows"] = [];
+    ws["!rows"][3] = { hpx: 60 }; // Ajusta la altura (hpx) a lo que necesites para ~4 líneas
     // Crear el workbook y añadir la hoja
     const wb = XLSX.utils.book_new();
     // Se define el nombre de la hoja
