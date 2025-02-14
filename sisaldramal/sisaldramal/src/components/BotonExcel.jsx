@@ -205,7 +205,7 @@ const ButtonExcel = ({ dataCSV, participants }) => {
       const rowNumber = parseInt(cellKey.match(/\d+/)[0]);
       const colNumber = columnLetterToNumber(colLetters);
 
-      if (rowNumber === 4) {
+      if (rowNumber === 4) { 
         if (colNumber >= 20 && colNumber <= 30) {
           ws[cellKey].s = {
             fill: { fgColor: { rgb: "ffdb8a" }, patternType: "solid" },
@@ -213,7 +213,7 @@ const ButtonExcel = ({ dataCSV, participants }) => {
             alignment: {
               horizontal: "center",
               vertical: "center",
-              wrapText: true,
+              wrapText: true, //quiebre de texto
             },
             border: {
               top: { style: "thin", color: { rgb: "000000" } },
