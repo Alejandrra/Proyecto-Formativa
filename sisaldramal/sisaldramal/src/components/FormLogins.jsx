@@ -101,7 +101,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       autoClose: 3000,
     });
 
-    resetForm();
+    /*resetForm();
     // poner todos los checks en false
     setChecks({
       docencia: false,
@@ -120,11 +120,15 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       prod_cientic: false,
       intern_curriculo: false,
       intern_casa: false,
-    });
+    });*/
 
     //limpiar los participantes
-    setParticipants([{ type: "", lastName: "", firstName: "" }]);
+   //setParticipants([{ type: "", lastName: "", firstName: "" }]);
+
+   console.log();
   };
+
+  
 
   return (
     <div className="row justify-content-center">
