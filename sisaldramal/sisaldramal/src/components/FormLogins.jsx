@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BotonExcel from "./BotonExcel";
@@ -40,6 +40,12 @@ export default function FormLogins({ onDataSubmit, dataList }) {
     intern_curriculo: false,
     intern_casa: false,
   });
+
+  useEffect(()=>{
+    console.log('participantes:',participants);
+    console.log('checks:',checks);
+
+  },[participants,checks]);
 
   const [datos, setDatos] = useState([]);
 

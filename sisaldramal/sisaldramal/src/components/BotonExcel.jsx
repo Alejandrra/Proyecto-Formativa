@@ -11,33 +11,41 @@ import React from "react";
 import * as XLSX from "xlsx-js-style";
 
 const ButtonExcel = ({ dataCSV, participants }) => {
-  //se necesita que participans tras que un arreglo, este se una a la dataCSV, esto en base a que datacsv es un arreglo que se recorrera y se le añadira un campo mas a la tabla excel
-  /*
-  participantes tiene la siguiente estructura
-  participants = [
-  {
-    type: "Estudiante",
-    lastName: "Perez",
-    firstName: "Juan", 
-  }
- ]
-  */
-  // Necesito que participants tenga la misma estructura que dataCSV
+ 
+  // Se verifica si el arreglo de participantes está vacío, en caso de estarlo se asigna el arreglo de participantes que se recibe como parámetro
   if (dataCSV.participants === undefined) {
     dataCSV.participants = participants;
   }
-  if (dataCSV.participants.length !== 0) {
-    participants = dataCSV.participants.map((participant) => {
-      return {
-        c_tParticipante: participant.type,
-        c_ApellidosMo: participant.lastName,
-        c_NombresMovi: participant.firstName,
-      };
-    });
-  }
-  // cambiar mis checks a X
+  const AuxDataParticipants = [];
+  // si tengo dato en dataCSV debo ver todos sus participantes, si tiene 1 se ejecuta ahi mismo, si tiene 2 se debe agregar justo despues del que se habia hecho otro arreglo
+  // si tiene 3 se debe agregar justo despues del que se habia hecho otro arreglo y asi sucesivamente
+  
+  dataCSV.forEach((row) => {
 
-  dataCSV = dataCSV.map((row) => {
+    const dataParts = row.participants || [];
+
+    if (dataParts.length ===0) {
+      AuxDataParticipants.push({
+        c_tParticipante: "",
+        c_ApellidosMo: "",
+        c_NombresMovi: "",
+      });
+    }else{
+      dataParts.forEach((part) => {
+        AuxDataParticipants.push({
+          ...row,
+          c_tParticipante: part.type,
+          c_ApellidosMo: part.lastName,
+          c_NombresMovi: part.firstName,
+        });
+      });
+    }
+  });
+
+
+
+  // cambiar mis checks a X
+  const dataAExportar = AuxDataParticipants.map((row) => {
     return {
       ...row,
       docencia: row.docencia === true ? "X" : "",
@@ -58,12 +66,7 @@ const ButtonExcel = ({ dataCSV, participants }) => {
       intern_casa: row.intern_casa === true ? "X" : "",
     };
   });
-  // Caso a editar: El datacvs y el particpants ya van relacionados como tal, por lo que no se necesita hacer un join, solo se necesita recorrer el datacsv y añadir los campos de participantes
-  //unir los dos arreglos pero que el partipante se una a la posicion 0, mas no que se convierta en la posocion 1
-  dataCSV[0] = participants.reduce(
-    (acc, obj) => ({ ...acc, ...obj }),
-    dataCSV[0]
-  );
+  
 
   // Si doy en guardar, solo me aparece el ultimo registro
   // Función para formatear la fecha
@@ -133,7 +136,7 @@ const ButtonExcel = ({ dataCSV, participants }) => {
   ];
 
   const exportToExcel = () => {
-    console.log("dataCSV", dataCSV);
+    console.log("dataCSV", dataAExportar);
     // Crear celdas de título y subtítulo
     const titleCell = {
       v: "PONTIFICIA UNIVERSIDAD CATÓLICA DEL ECUADOR",
@@ -156,7 +159,7 @@ const ButtonExcel = ({ dataCSV, participants }) => {
     const sheetData = [columns.map((c) => c.label)];
 
     // agregar datos
-    dataCSV.forEach((row) => {
+    dataAExportar.forEach((row) => {
       sheetData.push(columns.map((c) => row[c.key] || ""));
     });
 
