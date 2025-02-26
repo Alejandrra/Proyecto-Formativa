@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BotonExcel from "./BotonExcel";
+import axios from 'axios';
+
 import {
   CCard,
   CCardBody,
@@ -16,6 +18,36 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 // importa la libreria toastify
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+
+export default class PersonList extends React.Component {
+  state = {
+    persons: []
+  }
+
+  componentDidMount() {
+    axios.get(`https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes
+`)
+      .then(res => {
+        const persons = res.data;
+        this.setState({ persons });
+      })
+  }
+
+  render() {
+    return (
+      <ul>
+        {
+          this.state.persons
+            .map(person =>
+              <li key={person.id}>{person.name}</li>
+            )
+        }
+      </ul>
+    )
+  }
+}
+
 
 export default function FormLogins({ onDataSubmit, dataList }) {
   const [participants, setParticipants] = useState([
