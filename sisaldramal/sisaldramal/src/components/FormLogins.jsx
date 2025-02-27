@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import "bootstrap/dist/css/bootstrap.min.css";
 import BotonExcel from "./BotonExcel";
-
+import axios from "axios";
 import {
   CCard,
   CCardBody,
@@ -48,6 +48,13 @@ export default function FormLogins({ onDataSubmit, dataList }) {
     console.log('checks:',checks);
 
   },[participants,checks]);
+
+  useEffect(async () => {
+    const response = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
+    if(response?.data){
+      ///
+    }
+  }, []);
 
   const [datos, setDatos] = useState([]);
 
@@ -230,7 +237,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                     <label htmlFor="sede" className="form-label">
                       Sede
                     </label>
-                    <input
+                    {/* <input
                       type="text"
                       id="sede"
                       name="sede"
@@ -239,7 +246,12 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       className="form-control form-control-sm"
-                    />
+                    /> */}
+                    <select 
+                      id="sede"
+                      name="sede"
+                    ></select>
+                    
                     {errors.sede && (
                       <div className="text-warning">{errors.sede}</div>
                     )}
