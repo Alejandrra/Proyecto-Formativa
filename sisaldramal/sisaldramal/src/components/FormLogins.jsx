@@ -49,8 +49,9 @@ export default function FormLogins({ onDataSubmit, dataList }) {
 
   },[participants,checks]);
 
-  useEffect(async () => {
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
 
     /// SEDE
     const responseSede = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
@@ -70,13 +71,18 @@ export default function FormLogins({ onDataSubmit, dataList }) {
         option.value = datoDeApi.item; // es lo que envio al servidor
         select.add(option);
       });
-
     }
+  } catch(error){
+    console.error("Error al obtener datos:", error);
+  }
+
 
     /// Paises
+        try{
+
     const responsePaises = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=020-internac-pais");
     
-    if(responseSede?.data){
+    if(responsePaises?.data){
       /// reemplazo los datos obtenidos en el select
       let select = document.getElementById("pais");
       
@@ -85,19 +91,22 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       firstOption.value = "";
       select.add(firstOption); // anade al select
 
-      responseSede.data.map((datoDeApi) => {
+      responsePaises.data.map((datoDeApi) => {
         let option = document.createElement("option");
         option.text = datoDeApi.item; //muestra contenido al usuario 
         option.value = datoDeApi.item; // es lo que envio al servidor
         select.add(option);
       });
-
     }
+  }catch(error){
+    console.error("Error al obtener datos:", error);
+  }
     
     /// tipos movilizados
+        try{
     const responseTiposMovi = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=019-internac-tipos-mov");
     
-    if(responseSede?.data){
+    if(responseTiposMovi?.data){
       /// reemplazo los datos obtenidos en el select
       let select = document.getElementById("c_tParticipante");
       
@@ -106,19 +115,22 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       firstOption.value = "";
       select.add(firstOption); // anade al select
 
-      responseSede.data.map((datoDeApi) => {
+      responseTiposMovi.data.map((datoDeApi) => {
         let option = document.createElement("option");
         option.text = datoDeApi.item; //muestra contenido al usuario 
         option.value = datoDeApi.item; // es lo que envio al servidor
         select.add(option);
       });
-
     }
+  }catch(error){
+    console.error("Error al obtener datos:", error);
+  }
 
     /// Financiamiento
+          try {
     const responseFinanciamiento = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=021-internac-financiamiento");
     
-    if(responseSede?.data){
+    if(responseFinanciamiento?.data){
       /// reemplazo los datos obtenidos en el select
       let select = document.getElementById("financiamiento");
       
@@ -127,19 +139,22 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       firstOption.value = "";
       select.add(firstOption); // anade al select
 
-      responseSede.data.map((datoDeApi) => {
+      responseFinanciamiento.data.map((datoDeApi) => {
         let option = document.createElement("option");
         option.text = datoDeApi.item; //muestra contenido al usuario 
         option.value = datoDeApi.item; // es lo que envio al servidor
         select.add(option);
       });
-
     }
+  }catch(error){
+    console.error("Error al obtener datos:", error);
+  }
 
     /// Area de conocimiento
+        try{
     const responsea_Conocimiento = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=022-internac-areaconoc");
     
-    if(responseSede?.data){
+    if(responsea_Conocimiento?.data){
       /// reemplazo los datos obtenidos en el select
       let select = document.getElementById("a_conocimiento");
       
@@ -148,16 +163,20 @@ export default function FormLogins({ onDataSubmit, dataList }) {
       firstOption.value = "";
       select.add(firstOption); // anade al select
 
-      responseSede.data.map((datoDeApi) => {
+      responsea_Conocimiento.data.map((datoDeApi) => {
         let option = document.createElement("option");
         option.text = datoDeApi.item; //muestra contenido al usuario 
         option.value = datoDeApi.item; // es lo que envio al servidor
         select.add(option);
       });
-
     }
-
-  }, []);
+  }catch(error){
+    console.error("Error al obtener datos:", error);
+  }
+  fetchData();
+  }
+  
+}, []);
 
   const [datos, setDatos] = useState([]);
 
@@ -448,7 +467,10 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       onBlur={handleBlur}
                       
                     />*/}
-                    <select className="form-control">
+                    <select
+                      id="pais"
+                      name="pais"
+                      className="form-control">
                     </select>
 
                     {errors.pais && (
@@ -666,7 +688,10 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       onBlur={handleBlur}
                       
                     />*/}
-                    <select className="form-control" ></select>
+                    <select
+                      id="a_conocimiento"
+                      name="a_conocimiento" 
+                      className="form-control" ></select>
                     {errors.a_conocimiento && (
                       <div className="text-warning">
                         {errors.a_conocimiento}
@@ -685,7 +710,10 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       onBlur={handleBlur}
                       
                     />*/}
-                    <select className="form-control"></select>
+                    <select 
+                      id="financiamiento"
+                      name="financiamiento"
+                      className="form-control"></select>
                     {errors.financiamiento && (
                       <div className="text-warning">
                         {errors.financiamiento}
