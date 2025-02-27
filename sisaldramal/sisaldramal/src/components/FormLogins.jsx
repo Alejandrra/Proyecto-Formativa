@@ -50,10 +50,113 @@ export default function FormLogins({ onDataSubmit, dataList }) {
   },[participants,checks]);
 
   useEffect(async () => {
-    const response = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
-    if(response?.data){
-      ///
+
+
+    /// SEDE
+    const responseSede = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
+    
+    if(responseSede?.data){
+      /// reemplazo los datos obtenidos en el select
+      let select = document.getElementById("sede");
+      
+      let firstOption = document.createElement("option");
+      firstOption.text = "-- Seleccione una sede --";
+      firstOption.value = "";
+      select.add(firstOption); // anade al select
+
+      responseSede.data.map((datoDeApi) => {
+        let option = document.createElement("option");
+        option.text = datoDeApi.item; //muestra contenido al usuario 
+        option.value = datoDeApi.item; // es lo que envio al servidor
+        select.add(option);
+      });
+
     }
+
+    /// Paises
+    const responsePaises = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=020-internac-pais");
+    
+    if(responseSede?.data){
+      /// reemplazo los datos obtenidos en el select
+      let select = document.getElementById("pais");
+      
+      let firstOption = document.createElement("option");
+      firstOption.text = "-- Seleccione un pais --";
+      firstOption.value = "";
+      select.add(firstOption); // anade al select
+
+      responseSede.data.map((datoDeApi) => {
+        let option = document.createElement("option");
+        option.text = datoDeApi.item; //muestra contenido al usuario 
+        option.value = datoDeApi.item; // es lo que envio al servidor
+        select.add(option);
+      });
+
+    }
+    
+    /// tipos movilizados
+    const responseTiposMovi = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=019-internac-tipos-mov");
+    
+    if(responseSede?.data){
+      /// reemplazo los datos obtenidos en el select
+      let select = document.getElementById("c_tParticipante");
+      
+      let firstOption = document.createElement("option");
+      firstOption.text = "-- Seleccione el tipo de movilizado --";
+      firstOption.value = "";
+      select.add(firstOption); // anade al select
+
+      responseSede.data.map((datoDeApi) => {
+        let option = document.createElement("option");
+        option.text = datoDeApi.item; //muestra contenido al usuario 
+        option.value = datoDeApi.item; // es lo que envio al servidor
+        select.add(option);
+      });
+
+    }
+
+    /// Financiamiento
+    const responseFinanciamiento = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=021-internac-financiamiento");
+    
+    if(responseSede?.data){
+      /// reemplazo los datos obtenidos en el select
+      let select = document.getElementById("financiamiento");
+      
+      let firstOption = document.createElement("option");
+      firstOption.text = "-- Seleccione el tipo de financiamiento --";
+      firstOption.value = "";
+      select.add(firstOption); // anade al select
+
+      responseSede.data.map((datoDeApi) => {
+        let option = document.createElement("option");
+        option.text = datoDeApi.item; //muestra contenido al usuario 
+        option.value = datoDeApi.item; // es lo que envio al servidor
+        select.add(option);
+      });
+
+    }
+
+    /// Area de conocimiento
+    const responsea_Conocimiento = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=022-internac-areaconoc");
+    
+    if(responseSede?.data){
+      /// reemplazo los datos obtenidos en el select
+      let select = document.getElementById("a_conocimiento");
+      
+      let firstOption = document.createElement("option");
+      firstOption.text = "-- Seleccione el tipo de Area de Conocimiento --";
+      firstOption.value = "";
+      select.add(firstOption); // anade al select
+
+      responseSede.data.map((datoDeApi) => {
+        let option = document.createElement("option");
+        option.text = datoDeApi.item; //muestra contenido al usuario 
+        option.value = datoDeApi.item; // es lo que envio al servidor
+        select.add(option);
+      });
+
+    }
+
   }, []);
 
   const [datos, setDatos] = useState([]);
@@ -250,6 +353,8 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                     <select 
                       id="sede"
                       name="sede"
+                      className="form-control form-control-sm"
+
                     ></select>
                     
                     {errors.sede && (
@@ -333,7 +438,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                   </div>
                   <div className="col">
                     <label htmlFor="pais">País</label>
-                    <input
+                    {/*<input
                       type="text"
                       id="pais"
                       name="pais"
@@ -341,8 +446,11 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       value={values.pais}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="form-control"
-                    />
+                      
+                    />*/}
+                    <select className="form-control">
+                    </select>
+
                     {errors.pais && (
                       <div className="text-warning">{errors.pais}</div>
                     )}
@@ -361,7 +469,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                             Tipo de Participante
                           </label>
                           <select
-                            value={participant.type}
+                            //value={participant.type}
                             id="c_tParticipante"
                             name="c_tParticipante"
                             className="form-select form-select"
@@ -373,7 +481,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                               )
                             }
                           >
-                            <option value="" disabled>
+                            {/*<option value="" disabled>
                               Seleccione el tipo movilizado
                             </option>
                             <option value="ESTUDIANTE">ESTUDIANTE</option>
@@ -383,7 +491,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                             </option>
                             <option value="INVESTIGADOR">INVESTIGADOR</option>
                             <option value="VOLUNTARIO">VOLUNTARIO</option>
-                            <option value="INDEPENDIENTE">INDEPENDIENTE</option>
+                            <option value="INDEPENDIENTE">INDEPENDIENTE</option>*/}
                           </select>
                           {errors.tparticipante && (
                             <div className="text-warning">
@@ -548,7 +656,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                 <div className="row mb-3">
                   <div className="col">
                     <label htmlFor="a_conocimiento">Área de Conocimiento</label>
-                    <input
+                    {/*<input
                       type="text"
                       id="a_conocimiento"
                       name="a_conocimiento"
@@ -556,8 +664,9 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       value={values.a_conocimiento}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="form-control"
-                    />
+                      
+                    />*/}
+                    <select className="form-control" ></select>
                     {errors.a_conocimiento && (
                       <div className="text-warning">
                         {errors.a_conocimiento}
@@ -566,7 +675,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                   </div>
                   <div className="col">
                     <label htmlFor="financiamiento">Financiamiento</label>
-                    <input
+                    {/*<input
                       type="text"
                       id="financiamiento"
                       name="financiamiento"
@@ -574,8 +683,9 @@ export default function FormLogins({ onDataSubmit, dataList }) {
                       value={values.financiamiento}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="form-control"
-                    />
+                      
+                    />*/}
+                    <select className="form-control"></select>
                     {errors.financiamiento && (
                       <div className="text-warning">
                         {errors.financiamiento}
