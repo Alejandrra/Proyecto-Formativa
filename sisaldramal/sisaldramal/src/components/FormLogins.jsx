@@ -50,11 +50,12 @@ export default function FormLogins({ onDataSubmit, dataList }) {
   },[participants,checks]);
 
   useEffect(() => {
+
     const fetchData = async () => {
       try {
 
-    /// SEDE
-    const responseSede = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
+    /// SEDE responseSede 
+    const responseSede  = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=018-internac-sedes");
     
     if(responseSede?.data){
       /// reemplazo los datos obtenidos en el select
@@ -77,7 +78,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
   }
 
 
-    /// Paises
+    /// Paises responsePaises 
         try{
 
     const responsePaises = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=020-internac-pais");
@@ -102,7 +103,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
     console.error("Error al obtener datos:", error);
   }
     
-    /// tipos movilizados
+    /// tipos movilizados responseTiposMovi
         try{
     const responseTiposMovi = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=019-internac-tipos-mov");
     
@@ -126,7 +127,7 @@ export default function FormLogins({ onDataSubmit, dataList }) {
     console.error("Error al obtener datos:", error);
   }
 
-    /// Financiamiento
+    /// Financiamiento rresponseFinanciamiento
           try {
     const responseFinanciamiento = await axios.get("https://api.pucese.edu.ec:25419/api/juridico/getListas?codprincipal=021-internac-financiamiento");
     
